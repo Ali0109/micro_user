@@ -1,3 +1,7 @@
+# My ignore #
+data
+pgadmin_data
+
 # Django #
 *.log
 *.pot
