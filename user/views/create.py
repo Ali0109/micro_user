@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework.response import Response
 
-from user.serializers import UserCreateSerializer
+from user.serializers.create_user import UserCreateSerializer
 from user.services.create import CreateUserService
 
 

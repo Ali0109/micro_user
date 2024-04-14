@@ -16,7 +16,6 @@ services:
 
   db:
     image: postgres
-    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: yjwc5Wc9ASdy313okzNePxUj
@@ -25,7 +24,6 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: root@root.com
       PGADMIN_DEFAULT_PASSWORD: yjwc5Wc9ASdy313okzNePxUj

@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
 
 from user.models import User
-from user.serializers import UserSerializer
+from user.serializers.user import UserSerializer
 
 
 class UserPagination(PageNumberPagination):

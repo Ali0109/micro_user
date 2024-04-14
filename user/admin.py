@@ -16,5 +16,6 @@ class UserPhotosAdmin(admin.ModelAdmin):
     search_fields = ("user__username",)
     list_filter = ("is_active",)
 
-    def get_user_username(self, obj):
+    @staticmethod
+    def get_user_username(obj):
         return obj.user.username
