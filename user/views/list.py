@@ -1,14 +1,8 @@
 from rest_framework import generics
-from rest_framework.pagination import PageNumberPagination
 
 from user.models import User
+from user.paginations import UserPagination
 from user.serializers.user import UserSerializer
-
-
-class UserPagination(PageNumberPagination):
-    page_size = 1
-    page_size_query_param = "page_size"
-    max_page_size = 100
 
 
 class UserListAPIView(generics.ListAPIView):

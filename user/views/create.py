@@ -1,22 +1,33 @@
 from rest_framework import generics
 from rest_framework.response import Response
 
-from user.serializers.create_user import UserCreateSerializer
-from user.services.create import CreateUserService
+from notification.services.notifications import NotificationService, TelegramSender, EmailSender
+from user.models import User
+from user.serializers.user import UserSerializer
 
 
-class UserCreateAPIView(generics.CreateAPIView):
-    serializer_class = UserCreateSerializer
+class UserCreateAPIView(generics.GenericAPIView):
+    serializer_class = UserSerializer
 
-    def get_queryset(self):
-        return CreateUserService(
-            username=self.request.data.get("username"),
-            password=self.request.data.get("password")
-        ).create()
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=self.request.data)
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        self.get_queryset()
-        return Response({"ok": True})
+        user = User.objects.create_user(**serializer.validated_data)
+
+        senders = []
+        if user.tg_id:
+            senders.append(TelegramSender(
+                chat_id=user.tg_id,
+                text="User was created successfully")
+            )
+        elif user.email:
+            senders.append(EmailSender(
+                mail=user.email,
+                title="Successfully registered",
+                body="User was created successfully")
+            )
+        NotificationService(senders=senders).send()
+
+        serializer = self.serializer_class(user)
+        return Response(serializer.data)

@@ -4,17 +4,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
 
+from base.models import BaseModel
 from user.managers import MyUserManager, MyUserGlobalManager
-
-
-class BaseModel(models.Model):
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
-        ordering = ("created_at",)
 
 
 class User(AbstractUser, BaseModel):
@@ -31,6 +22,7 @@ class User(AbstractUser, BaseModel):
     tg_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
     name = models.CharField(max_length=100, null=True, blank=True)
     phone = models.CharField(max_length=100, null=True, blank=True)
+    photo = models.ForeignKey("UserPhotos", on_delete=models.SET_NULL, null=True, blank=True)
 
     objects = MyUserManager()
     global_objects = MyUserGlobalManager()
@@ -54,7 +46,6 @@ def upload_user_photo(instance, filename):
 class UserPhotos(BaseModel):
 
     id = models.CharField(max_length=100, primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="photos")
     photo = models.ImageField(upload_to=upload_user_photo)
 
     class Meta:
@@ -63,7 +54,7 @@ class UserPhotos(BaseModel):
         db_table = "user_photos"
 
     def __str__(self):
-        return f"{self.user.username}"
+        return f"{self.id}"
 
     def get_absolute_url(self):
         return reverse("user/photos", args=[str(self.id)])

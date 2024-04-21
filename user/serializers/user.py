@@ -3,7 +3,6 @@ from user.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    photos = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -13,8 +12,3 @@ class UserSerializer(serializers.ModelSerializer):
             "groups": {"write_only": True},
             "user_permissions": {"write_only": True},
         }
-
-    def get_photos(self, obj):
-        request = self.context.get("request")
-        user_photos = obj.photos.all()
-        return [request.build_absolute_uri(photo.photo.url) for photo in user_photos]

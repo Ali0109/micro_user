@@ -7,7 +7,7 @@ from core import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("user/", include("user.urls")),
+    path("api/", include("user.urls")),
     re_path(r"token/?", TokenObtainSlidingView.as_view(), name="token_obtain_pair"),
 ]
 
